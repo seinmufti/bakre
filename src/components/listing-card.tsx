@@ -23,7 +23,7 @@ export const ListingCard = React.memo(function ListingCard({ listing }: { listin
     <Card className="gap-0 overflow-hidden py-0">
       <View className="bg-muted aspect-[16/10] w-full items-center justify-center">
         {photo ? (
-          <Image source={{ uri: photo }} style={{ width: '100%', height: '100%' }} contentFit="cover" transition={200} />
+          <Image source={typeof photo === 'string' ? { uri: photo } : photo} style={{ width: '100%', height: '100%' }} contentFit="cover" transition={200} />
         ) : (
           <Icon as={CarFront} size={56} className="text-muted-foreground/40" />
         )}

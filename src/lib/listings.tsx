@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { ImageSource } from 'expo-image';
 import * as React from 'react';
 
 export type Currency = 'USD' | 'IQD';
@@ -19,55 +20,144 @@ export type Listing = {
   /** ISO date strings (YYYY-MM-DD). */
   availableFrom?: string;
   availableTo?: string;
-  photos?: string[];
+  /** Remote/local URIs, or bundled assets (require) for sample listings. */
+  photos?: PhotoSource[];
   description?: string;
   phone?: string;
 };
 
+/** A URI string, or a bundled asset from require() (a number on native, an object on web). */
+export type PhotoSource = string | number | ImageSource;
+
 export type NewListing = Omit<Listing, 'id' | 'createdAt'>;
 
 const STORAGE_KEY = 'bakre.listings.v1';
+const SEED_PREFIX = 'seed-';
 
 const day = 24 * 60 * 60 * 1000;
 
+/** Sample everyday cars. Photos are bundled; see assets/cars/CREDITS.md. Never persisted. */
 const SEED: Listing[] = [
   {
-    id: 'seed-1',
-    createdAt: Date.now() - 1 * day,
-    title: 'Porsche 911 Turbo S',
-    brand: 'Porsche',
-    model: '911',
-    year: 2022,
-    color: 'Silver',
-    pricePerDay: 250,
+    title: 'Toyota Corolla Hybrid',
+    brand: 'Toyota',
+    model: 'Corolla',
+    year: 2020,
+    color: 'White',
+    pricePerDay: 40,
     currency: 'USD',
-    location: 'Erbil',
-    photos: ['https://images.unsplash.com/photo-1594502184342-2e12f877aa73?w=1200&q=80'],
+    location: 'Erbil, 100m Road',
+    photos: [require('../../assets/cars/corolla.jpg')],
+    description: 'Very fuel efficient, perfect for city driving. Clean and non-smoking.',
     phone: '07501234567',
   },
   {
-    id: 'seed-2',
-    createdAt: Date.now() - 2 * day,
-    brand: 'Hyundai',
-    model: 'Elantra',
-    year: 2021,
+    brand: 'Toyota',
+    model: 'Camry',
+    year: 2018,
     color: 'Silver',
-    pricePerDay: 45000,
+    pricePerDay: 55000,
     currency: 'IQD',
-    location: 'Sulaymaniyah',
+    location: 'Sulaymaniyah, Salim Street',
+    photos: [require('../../assets/cars/camry.jpg')],
+    description: 'Comfortable sedan for long trips. Full insurance included.',
+    phone: '07701234567',
   },
   {
-    id: 'seed-3',
-    createdAt: Date.now() - 3 * day,
-    title: 'Kia Sportage',
-    brand: 'Kia',
-    model: 'Sportage',
-    year: 2023,
-    pricePerDay: 70,
+    title: 'Toyota Yaris – small & cheap',
+    brand: 'Toyota',
+    model: 'Yaris',
+    year: 2020,
+    color: 'Red',
+    pricePerDay: 30,
     currency: 'USD',
     location: 'Duhok',
+    availableFrom: '2026-11-10',
+    availableTo: '2026-12-31',
+    photos: [require('../../assets/cars/yaris.jpg')],
   },
-];
+  {
+    brand: 'Hyundai',
+    model: 'Elantra',
+    year: 2023,
+    color: 'Silver',
+    pricePerDay: 50000,
+    currency: 'IQD',
+    location: 'Erbil, Ankawa',
+    photos: [require('../../assets/cars/elantra.jpg')],
+    phone: '07504567890',
+  },
+  {
+    title: 'Hyundai Tucson family SUV',
+    brand: 'Hyundai',
+    model: 'Tucson',
+    year: 2022,
+    color: 'Grey',
+    pricePerDay: 65,
+    currency: 'USD',
+    location: 'Erbil, Dream City',
+    photos: [require('../../assets/cars/tucson.jpg')],
+    description: 'Spacious SUV with a big trunk. Great for family trips to the mountains.',
+  },
+  {
+    brand: 'Hyundai',
+    model: 'Sonata',
+    year: 2024,
+    color: 'White',
+    pricePerDay: 75000,
+    currency: 'IQD',
+    location: 'Kirkuk',
+    photos: [require('../../assets/cars/sonata.jpg')],
+    phone: '07709876543',
+  },
+  {
+    brand: 'Kia',
+    model: 'Sportage',
+    year: 2025,
+    color: 'White',
+    pricePerDay: 70,
+    currency: 'USD',
+    location: 'Sulaymaniyah, Bakrajo',
+    availableFrom: '2026-11-15',
+    photos: [require('../../assets/cars/sportage.jpg')],
+    description: 'Almost new. Minimum rental 3 days.',
+  },
+  {
+    title: 'Kia Rio – easy to park',
+    brand: 'Kia',
+    model: 'Rio',
+    year: 2021,
+    color: 'Grey',
+    pricePerDay: 35000,
+    currency: 'IQD',
+    location: 'Zakho',
+    photos: [require('../../assets/cars/rio.jpg')],
+  },
+  {
+    brand: 'Kia',
+    model: 'Cerato',
+    year: 2019,
+    color: 'Red',
+    pricePerDay: 35,
+    currency: 'USD',
+    location: 'Erbil, Iskan',
+    photos: [require('../../assets/cars/cerato.jpg')],
+    phone: '07512223344',
+  },
+  {
+    brand: 'Chevrolet',
+    model: 'Cruze',
+    year: 2017,
+    color: 'Blue',
+    pricePerDay: 40000,
+    currency: 'IQD',
+    location: 'Halabja',
+    photos: [require('../../assets/cars/cruze.jpg')],
+    description: 'Reliable daily car, automatic gearbox, A/C works great.',
+  },
+].map((l, i) => ({ ...l, id: `${SEED_PREFIX}${i + 1}`, createdAt: Date.now() - (i + 1) * day }) as Listing);
+
+const isSeed = (l: Listing) => l.id.startsWith(SEED_PREFIX);
 
 type ListingsCtx = {
   listings: Listing[];
@@ -83,13 +173,19 @@ export function ListingsProvider({ children }: { children: React.ReactNode }) {
 
   React.useEffect(() => {
     AsyncStorage.getItem(STORAGE_KEY)
-      .then((raw) => setListings(raw ? (JSON.parse(raw) as Listing[]) : SEED))
+      // Stored data only holds user listings; sample cars are always the current SEED.
+      .then((raw) => {
+        const saved = raw ? (JSON.parse(raw) as Listing[]).filter((l) => !isSeed(l)) : [];
+        setListings([...saved, ...SEED]);
+      })
       .catch(() => setListings(SEED))
       .finally(() => setReady(true));
   }, []);
 
   React.useEffect(() => {
-    if (ready) AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(listings)).catch(() => {});
+    if (!ready) return;
+    const own = listings.filter((l) => !isSeed(l));
+    AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(own)).catch(() => {});
   }, [listings, ready]);
 
   const addListing = React.useCallback((data: NewListing) => {
