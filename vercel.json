@@ -1,0 +1,14 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "buildCommand": "npx expo export -p web",
+  "outputDirectory": "dist",
+  "framework": null,
+  "redirects": [{ "source": "/", "destination": "/bakre", "permanent": false }],
+  "rewrites": [
+    { "source": "/bakre/_expo/:path*", "destination": "/_expo/:path*" },
+    { "source": "/bakre/assets/:path*", "destination": "/assets/:path*" },
+    { "source": "/bakre/favicon.ico", "destination": "/favicon.ico" },
+    { "source": "/bakre", "destination": "/index.html" },
+    { "source": "/bakre/:path*", "destination": "/index.html" }
+  ]
+}

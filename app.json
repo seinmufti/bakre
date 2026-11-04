@@ -40,7 +40,8 @@
     ],
     "scheme": "bakre",
     "experiments": {
-      "typedRoutes": true
+      "typedRoutes": true,
+      "baseUrl": "/bakre"
     }
   }
 }
