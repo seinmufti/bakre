@@ -1,13 +1,14 @@
 {
   "expo": {
-    "name": "bakre",
+    "name": "BaKre",
     "slug": "bakre",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
-    "userInterfaceStyle": "light",
+    "userInterfaceStyle": "automatic",
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.bakre.app"
     },
     "android": {
       "adaptiveIcon": {
@@ -16,10 +17,30 @@
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
       },
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.bakre.app"
     },
     "web": {
-      "favicon": "./assets/favicon.png"
+      "favicon": "./assets/favicon.png",
+      "bundler": "metro",
+      "output": "single"
+    },
+    "plugins": [
+      "expo-router",
+      "expo-status-bar",
+      "expo-image",
+      "expo-localization",
+      "@react-native-community/datetimepicker",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "BaKre needs access to your photos so you can add pictures of your car."
+        }
+      ]
+    ],
+    "scheme": "bakre",
+    "experiments": {
+      "typedRoutes": true
     }
   }
 }
